@@ -4,9 +4,20 @@ import numpy as np
 import bisect
 import cv2
 
+def R_t_to_T(R, t):
+    T = np.array([
+        [R[0, 0], R[0, 1], R[0, 2], t[0, 0]],
+        [R[1, 0], R[1, 1], R[1, 2], t[0, 1]],
+        [R[2, 0], R[2, 1], R[2, 2], t[0, 2]],
+        [0      , 0      , 0      , 1      ]  
+    ])
+    return T
+
 def read_calib(path_file):
     """
         读取KITTI的外参信息，读取左相机。
+        Return:
+            K, R, t
     """
     with open(path_file, 'r') as file:
         for line in file:
@@ -78,9 +89,9 @@ def read_odom(path_odom):
 
     return odom_lists
 
-def odom_to_T_r(odom_lists, i):
+def odom_to_R_t(odom_lists, i):
     """
-        将第i行对应的位姿信息转换成旋转矩阵T和平移向量t
+        将第i行对应的位姿信息转换成旋转矩阵R和平移向量t
     """
     odom = odom_lists[i]
 

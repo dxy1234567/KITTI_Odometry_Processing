@@ -4,8 +4,8 @@ import numpy as np
 import sys
 sys.path.append(".")
 
-from others.KITTI.utils.functions import get_point_cloud, read_odom, odom_to_T_r, read_pcd_list, read_image_list, read_calibration_file
-from others.KITTI.utils.util import print_progress
+from utils.functions import get_point_cloud, read_odom, odom_to_T_r, read_pcd_list, read_image_list, read_calibration_file
+from utils.util import print_progress
 
 directory_pcd = "/data/KITTI/data_odometry_velodyne/dataset/sequences/00/velodyne"
 directory_image = "/data/KITTI/data_odometry_gray/dataset/sequences/00/image_0"
