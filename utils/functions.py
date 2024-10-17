@@ -7,8 +7,8 @@ import cv2
 def R_t_to_T(R, t):
     T = np.array([
         [R[0, 0], R[0, 1], R[0, 2], t[0, 0]],
-        [R[1, 0], R[1, 1], R[1, 2], t[0, 1]],
-        [R[2, 0], R[2, 1], R[2, 2], t[0, 2]],
+        [R[1, 0], R[1, 1], R[1, 2], t[1, 0]],
+        [R[2, 0], R[2, 1], R[2, 2], t[2, 0]],
         [0      , 0      , 0      , 1      ]  
     ])
     return T
@@ -179,9 +179,8 @@ def read_pcd_list(directory_pcd):
     pcd_lists = []
 
     for file_name in sorted(os.listdir(directory_pcd)):
-        if file_name.endswith(".bin"):
-            file_path = os.path.join(directory_pcd, file_name)
-            pcd_lists.append(file_path)
+        file_path = os.path.join(directory_pcd, file_name)
+        pcd_lists.append(file_path)
     return pcd_lists
 
 def read_image_list(directory_image):
