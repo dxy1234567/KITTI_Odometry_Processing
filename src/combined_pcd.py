@@ -4,20 +4,20 @@ import numpy as np
 import sys
 sys.path.append(".")
 
-from utils.functions import get_point_cloud, read_odom, odom_to_T_r, read_pcd_list, read_image_list, read_calibration_file
+from utils.functions import get_point_cloud, read_odom, odom_to_T_r, read_pcd_list, read_image_list, read_calib, R_t_to_T
 from utils.util import print_progress
 
 directory_pcd = "/data/KITTI/data_odometry_velodyne/dataset/sequences/00/velodyne"
 directory_image = "/data/KITTI/data_odometry_gray/dataset/sequences/00/image_0"
 path_odom = "/data/KITTI/data_odometry_poses/dataset/poses/00.txt"
+path_calib = "/data/KITTI/data_odometry_calib/dataset/sequences/00/calib.txt"
 
 path_output = "/root/data/output/all"
 
 odom_lists = read_odom(path_odom)
-
 pcd_lists = read_pcd_list(directory_pcd)
-
 image_lists = read_image_list(directory_image)
+T_CL = R_t_to_T(read_calib(path_calib)[1:3])
 
 N = min(len(pcd_lists), len(image_lists))
 
@@ -31,9 +31,11 @@ for i in range(5, 6):
         
         pcd = get_point_cloud(pcd_lists[j])
 
-        T, _, _ = odom_to_T_r(odom_lists, j)
+        T_WC, _, _ = odom_to_T_r(odom_lists, j)
 
-        pcd.transform(T)
+        T_WL = T_WL @ T_CL
+
+        pcd.transform(T_WL)
 
         combined_pcd += pcd
 

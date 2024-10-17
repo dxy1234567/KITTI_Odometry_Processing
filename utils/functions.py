@@ -59,18 +59,19 @@ def get_point_cloud(bin_path):
 
 
 def read_calibration_file(file_path):
-    calibration_data = {}
+    return 
+    # calibration_data = {}
 
-    with open(file_path, 'r') as file:
-        for line in file:
-            # 去除前后空格并分割成key-value对
-            line = line.strip()
-            if line:
-                key, value = line.split(':', 1)
-                # 将矩阵元素转换为浮点数
-                calibration_data[key] = [float(x) for x in value.split()]
+    # with open(file_path, 'r') as file:
+    #     for line in file:
+    #         # 去除前后空格并分割成key-value对
+    #         line = line.strip()
+    #         if line:
+    #             key, value = line.split(':', 1)
+    #             # 将矩阵元素转换为浮点数
+    #             calibration_data[key] = [float(x) for x in value.split()]
 
-    return calibration_data
+    # return calibration_data
 
 def extract_timestamp(file_name):
     # 提取文件名中的时间戳部分（假设格式如 "file_<秒数>_<纳秒数>.txt"）

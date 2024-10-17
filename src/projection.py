@@ -43,10 +43,8 @@ directory_output = "/root/data/output/projection_KITTI/"
 for i in range(N):
     j = i + start_index
 
-    T_WL, _, _ = odom_to_R_t(odom_list, i)
-    T_LW = np.linalg.inv(T_WL)
-
-    T_CW = T_CL @ T_LW
+    T_WC, _, _ = odom_to_R_t(odom_list, j)
+    T_CW = np.linalg.inv(T_WC)
 
     rvec, tvec = T_to_r_t(T_CW)
 
