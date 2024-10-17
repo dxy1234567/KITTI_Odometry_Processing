@@ -39,7 +39,6 @@ start_index = int(os.path.splitext(os.path.basename(combined_pcd_list[0]))[0])
 directory_output = "/root/data/output/normal_projection_KITTI/"
 # i表示为XT16时间戳序号（下标）
 for i in range(N):
-
     rvec, tvec = T_to_r_t(T_CL)
 
     path_pcd = combined_pcd_list[i]
