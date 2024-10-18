@@ -15,7 +15,7 @@ from utils.functions import (odom_to_R_t, T_to_r_t, read_calib, R_t_to_T,
 from utils.pcd2depth import pcd_projection
 from utils.util import print_progress
 
-directory_combined_pcd = "/root/data/output/combined_pcd/"   # 直接对拼接好的点云组进行操作
+directory_combined_pcd = "/root/data/output/all/"   # 直接对拼接好的点云组进行操作
 directory_image = "/data/KITTI/data_odometry_gray/dataset/sequences/00/image_0/"
 path_odom = "/data/KITTI/data_odometry_poses/dataset/poses/00.txt"
 path_calib = "/data/KITTI/data_odometry_calib/dataset/sequences/00/calib.txt"
@@ -32,8 +32,6 @@ camera_intrinsics = K
 ## 畸变参数
 dist_coeffs = np.float64([0, 0, 0, 0, 0])
 
-# 外参: LiDAR to Camera
-T_CL = R_t_to_T(R, t)
 
 N = len(combined_pcd_list)
 
