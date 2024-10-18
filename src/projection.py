@@ -40,7 +40,9 @@ directory_output = "/root/data/output/projection_KITTI/"
 # i表示为XT16时间戳序号（下标）
 for i in range(N):
     j = i + start_index
-
+    if j >= N - 5:
+        break
+    
     T_WC, _, _ = odom_to_R_t(odom_list, j)
     T_CW = np.linalg.inv(T_WC)
 

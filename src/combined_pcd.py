@@ -33,7 +33,7 @@ for i in range(5, N - 5):
         
         pcd = get_point_cloud(pcd_lists[j])
 
-        T_WC, _, _ = odom_to_R_t(odom_lists, i)
+        T_WC, _, _ = odom_to_R_t(odom_lists, j)
 
         T_WL = T_WC @ T_CL
 
