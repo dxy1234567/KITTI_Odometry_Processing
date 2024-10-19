@@ -65,8 +65,8 @@ def pcd_projection(image_origin, cloud_origin, rvec, tvec, camera_intrinsics, di
             pts_3d.append((point_3d[0], point_3d[1], point_3d[2]))      # 将符合要求的点添加到pts_3d中
 
     # 找出深度的最大值和最小值
-    min_depth = min(point_3d[0] for point_3d in pts_3d)
-    max_depth = max(point_3d[0] for point_3d in pts_3d)
+    min_depth = min(point_3d[2] for point_3d in pts_3d)
+    max_depth = max(point_3d[2] for point_3d in pts_3d)
 
 
     # Project 3D points into image view
@@ -77,7 +77,7 @@ def pcd_projection(image_origin, cloud_origin, rvec, tvec, camera_intrinsics, di
         x, y = point_2d.ravel()
         x, y = int(x), int(y)
         if 0 <= x < image_origin.shape[1] and 0 <= y < image_origin.shape[0]:
-            cur_depth = pts_3d[i][0]  # 获取当前点的深度
+            cur_depth = pts_3d[i][2]  # 获取当前点的深度
             color = get_color(cur_depth, max_depth, min_depth)  # 根据深度获取颜色
             image_project[y, x] = color  # 设置点云的颜色
 

@@ -15,10 +15,10 @@ from utils.functions import (odom_to_R_t, T_to_r_t, read_calib, R_t_to_T,
 from utils.pcd2depth import pcd_projection
 from utils.util import print_progress
 
-directory_combined_pcd = "/root/data/output/all/"   # 直接对拼接好的点云组进行操作
-directory_image = "/data/KITTI/data_odometry_gray/dataset/sequences/00/image_0/"
-path_odom = "/data/KITTI/data_odometry_poses/dataset/poses/00.txt"
-path_calib = "/data/KITTI/data_odometry_calib/dataset/sequences/00/calib.txt"
+directory_combined_pcd = "/home/cjs/data/output/com_pcd_C_250/"   # 直接对拼接好的点云组进行操作
+directory_image = "/home/cjs/data/KITTI/data_odometry_gray/dataset/sequences/00/image_0/"
+path_odom = "/home/cjs/data/KITTI/data_odometry_poses/dataset/poses/00.txt"
+path_calib = "/home/cjs/data/KITTI/data_odometry_calib/dataset/sequences/00/calib.txt"
 
 odom_list = read_odom(path_odom)
 combined_pcd_list = read_pcd_list(directory_combined_pcd)
@@ -36,17 +36,19 @@ dist_coeffs = np.float64([0, 0, 0, 0, 0])
 N = len(combined_pcd_list)
 
 start_index = int(os.path.splitext(os.path.basename(combined_pcd_list[0]))[0])
-directory_output = "/root/data/output/projection_KITTI/"
+directory_output = "/home/cjs/data/output/com_projection_C_250/"
 # i表示为XT16时间戳序号（下标）
 for i in range(N):
     j = i + start_index
     if j >= N - 5:
         break
     
-    T_WC, _, _ = odom_to_R_t(odom_list, j)
-    T_CW = np.linalg.inv(T_WC)
+    # T_WC, _, _ = odom_to_R_t(odom_list, j)
+    # T_CW = np.linalg.inv(T_WC)
 
-    rvec, tvec = T_to_r_t(T_CW)
+    # rvec, tvec = T_to_r_t(T_CW)
+    rvec = np.array([[0], [0], [0]], dtype=np.float64)
+    tvec = np.array([[0], [0], [0]], dtype=np.float64)
 
     path_pcd = combined_pcd_list[i]
     path_image = image_list[j]
