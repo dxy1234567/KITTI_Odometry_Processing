@@ -8,6 +8,7 @@ import numpy as np
 import os
 import cv2
 import sys
+import yaml
 sys.path.append(".")
 
 from utils.functions import (odom_to_R_t, T_to_r_t, read_calib, R_t_to_T,
@@ -15,9 +16,12 @@ from utils.functions import (odom_to_R_t, T_to_r_t, read_calib, R_t_to_T,
 from utils.pcd2depth import pcd_projection
 from utils.util import print_progress
 
-directory_pcd = "/root/data/output/pcd/"   # 直接对拼接好的点云组进行操作
-directory_image = "/data/KITTI/data_odometry_gray/dataset/sequences/00/image_0/"
-path_calib = "/data/KITTI/data_odometry_calib/dataset/sequences/00/calib.txt"
+with open("cfg/configure.yaml", "r") as file:
+    config = yaml.safe_load(file)
+
+directory_pcd = config["directory_pcd"]
+directory_image = config["directory_image"]
+path_calib = config["path_calib"]
 
 combined_pcd_list = read_pcd_list(directory_pcd)
 image_list = read_image_list(directory_image)
@@ -36,7 +40,7 @@ T_CL = R_t_to_T(R, t)
 N = len(combined_pcd_list)
 
 start_index = int(os.path.splitext(os.path.basename(combined_pcd_list[0]))[0])
-directory_output = "/root/data/output/normal_projection_KITTI/"
+directory_output = config["path_output_pro"]
 # i表示为XT16时间戳序号（下标）
 for i in range(N):
     rvec, tvec = T_to_r_t(T_CL)
