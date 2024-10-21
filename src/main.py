@@ -1,5 +1,5 @@
 from combined_pcd import combine_pcd
-from projection import project
+from projection import project, generate_depth
 import yaml
 
 def main():
@@ -12,12 +12,15 @@ def main():
     path_odom = config["path_odom"]
     path_calib = config["path_calib"]
 
-    directory_output_com = config["path_output_com"]
-    directory_output_pro = config["path_output_pro"]
+    directory_output_com = config["directory_output_com"]
+    directory_output_pro = config["directory_output_pro"]
+    directory_output_depth = config["directory_output_depth"]
 
     combine_pcd(directory_pcd, directory_image, path_odom, path_calib, directory_output_com)
 
     project(directory_combined_pcd, directory_image, path_odom, path_calib, directory_output_pro)
+
+    generate_depth(directory_combined_pcd, directory_image, path_odom, path_calib, directory_output_depth)
 
 
 if __name__ == "__main__":
