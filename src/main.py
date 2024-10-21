@@ -8,6 +8,7 @@ def main():
 
     directory_combined_pcd = config["directory_combined_pcd"]   # 直接对拼接好的点云组进行操作
     directory_pcd = config["directory_pcd"]
+    # directory_pcd = config["directory_pcd_"]
     directory_image = config["directory_image"]
     path_odom = config["path_odom"]
     path_calib = config["path_calib"]
@@ -15,13 +16,15 @@ def main():
     directory_output_com = config["directory_output_com"]
     directory_output_pro = config["directory_output_pro"]
     directory_output_depth = config["directory_output_depth"]
+    directory_output_com_depth = config["directory_output_com_depth"]
 
     combine_pcd(directory_pcd, directory_image, path_odom, path_calib, directory_output_com)
 
-    project(directory_combined_pcd, directory_image, path_odom, path_calib, directory_output_pro)
+    # project(directory_combined_pcd, directory_image, path_odom, path_calib, directory_output_pro)
 
-    generate_depth(directory_combined_pcd, directory_image, path_odom, path_calib, directory_output_depth)
+    # generate_depth(directory_combined_pcd, directory_image, path_calib, directory_output_com_depth)
 
+    generate_depth(directory_combined_pcd, directory_image, path_calib, directory_output_com_depth)
 
 if __name__ == "__main__":
     main()

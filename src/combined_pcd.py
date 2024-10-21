@@ -3,6 +3,7 @@ import numpy as np
 import os
 import sys
 import yaml
+import time
 sys.path.append(".")
 
 from utils.functions import get_point_cloud, read_odom, odom_to_R_t, read_pcd_list, read_image_list, read_calib, R_t_to_T
@@ -19,6 +20,7 @@ def combine_pcd(directory_pcd, directory_image, path_odom, path_calib, directory
 
     N = min(len(pcd_lists), len(image_lists))
 
+    start_time = time.time()
     print("----------------Combining begins----------------")
     for i in range(5, N - 5):
         combined_pcd = o3d.geometry.PointCloud()
@@ -45,6 +47,10 @@ def combine_pcd(directory_pcd, directory_image, path_odom, path_calib, directory
         o3d.io.write_point_cloud(path, combined_pcd)
 
         print_progress(i, N)
+    print("----------------End of Combining----------------")
+    end_time = time.time()
+    dur_time = end_time - start_time
+    print("Combining spends {}s.".format(dur_time))
     
 
 

@@ -9,6 +9,7 @@ import os
 import cv2
 import sys
 import yaml
+import time
 sys.path.append(".")
 
 from utils.functions import (odom_to_R_t, T_to_r_t, read_calib, R_t_to_T,
@@ -54,6 +55,8 @@ def generate_depth(directory_combined_pcd, directory_image, path_calib, director
     image_list = read_image_list(directory_image)
 
     K, R, t = read_calib(path_calib)
+    ### rrr
+    # T = R_t_to_T(R, t)
 
     # 相机内参
     camera_intrinsics = K
@@ -65,6 +68,8 @@ def generate_depth(directory_combined_pcd, directory_image, path_calib, director
 
     start_index = int(os.path.splitext(os.path.basename(combined_pcd_list[0]))[0])
     # i表示为XT16时间戳序号（下标）
+    start_time = time.time()
+    print("---------------Depth Generating---------------")
     for i in range(N):
         j = i + start_index
         if j >= N - 5:
@@ -75,9 +80,15 @@ def generate_depth(directory_combined_pcd, directory_image, path_calib, director
 
         image_origin = cv2.imread(path_image)
         cloud_origin = o3d.io.read_point_cloud(path_pcd)
+        ### rrr
+        # cloud_origin.transform(T)
 
         path_output = os.path.join(directory_output_depth, "{:06d}".format(j) + ".png")
 
         pts2d = get_depth(image_origin, cloud_origin, camera_intrinsics, dist_coeffs, path_output)
         print_progress(i, N)
+    print("---------------End of Depth Generating---------------")
+    end_time = time.time()
+    dur_time = end_time - start_time
+    print("Depth Spends {}s.".format(dur_time))
     
