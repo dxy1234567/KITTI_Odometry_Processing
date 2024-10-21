@@ -98,3 +98,25 @@ $$
 $$
 T_{WL}^t = T'^t = T_{WC}^t \cdot T_{CL}。
 $$
+
+
+#### 2）20241019点云坐标系变换
+
+在工作前期过程中，一直出现有点云投影无法对其图像的问题，该过程主要涉及点云的坐标系变换问题。而本工程的主要任务是将激光雷达的点云向前投影到相机坐标系下的投影平面上，期间涉及到多个坐标系的转换。而在坐标系变换过程中，有两个函数会与其有关，一个是`pcd.transform(T)`，另一个是`cv2.projectPoints`。
+
+- `pcd.transform(T)`
+
+  `pcd`表示点云在某一坐标系下的多点信息，而`transform`函数的作用是将`pcd`中的所有点经过变换矩阵$T$，变换到另一个新的坐标系中。
+
+- `cv2.projectPoints()`
+
+  ```python
+  imagePoints, jacobian = cv2.projectPoints(objectPoints, rvec, tvec, cameraMatrix, distCoeffs[, imagePoints[, jacobian[, aspectRatio]]])
+  ```
+
+  其中输入参数`rvec`和`tvec`也对应着一次坐标系的变换。
+
+  在之前的工程过程中，总是存在着点云投影无法对齐图像的问题。本人一度怀疑是点云数据出错。然而，事实表明似乎是`cv2.projectPoints`函数的坐标系变换存在着问题。
+
+在最后的尝试中，我将坐标系变换的需求全部给予`transform`函数上，而`cv2.projectPoints`函数的旋转向量和平移向量全部置零。投影结果是良好的，这表明`cv2.projectPoints`的使用存在着问题。故在代码的使用中`cv2.projectPoints`并没有坐标系转换的功能。
+
