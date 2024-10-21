@@ -10,5 +10,5 @@ directory_output_pro: "/root/data/output/normal_projection_KITTI/"
 directory_output_depth: "/home/cjs/data/output/depth"
 directory_output_com_depth: "/home/cjs/data/output/depth_com"
 
-name: "test3"
+name: "test"
 
