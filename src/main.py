@@ -50,7 +50,7 @@ def main():
         # generate_depth(height, width, dir_depth, path_calib, dir_depth)
         # generate_depth_gt(height, width, dir_output_com, path_calib, dir_depth_gt)
         
-        print("***********************\nSequnce {} done.\n***********************".format(i))
+        print("***********************\nSequnce {} done.\n***********************\n\n\n".format(i))
 
 
 
