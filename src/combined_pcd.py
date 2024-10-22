@@ -7,7 +7,7 @@ import time
 sys.path.append(".")
 
 from utils.functions import get_point_cloud, read_odom, odom_to_R_t, read_pcd_list, read_image_list, read_calib, R_t_to_T
-from utils.util import print_progress
+from utils.util import print_progress, print_time
 
 
 def combine_pcd(directory_pcd, directory_image, path_odom, path_calib, directory_output):
@@ -49,13 +49,7 @@ def combine_pcd(directory_pcd, directory_image, path_odom, path_calib, directory
         print_progress(i, N)
     print("----------------End of Combining----------------")
     end_time = time.time()
-    dur_time = end_time - start_time
-    print("Combining spends {}s.".format(dur_time))
+    print_time(start_time, end_time)
     
-
-
-
-
-
 
 
