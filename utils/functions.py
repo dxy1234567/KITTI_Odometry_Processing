@@ -4,6 +4,19 @@ import numpy as np
 import bisect
 import cv2
 
+def get_image_dimensions(dir_to_image):
+    dir_image = os.path.join(dir_to_image, "00", "gray")
+    files = os.listdir(dir_image)
+    
+    for file in files:
+        file_path = os.path.join(dir_image, file)
+        image = cv2.imread(file_path)
+        if image is not None:
+            height, width = image.shape[:2]
+            return height, width
+    
+    return None
+
 def R_t_to_T(R, t):
     T = np.array([
         [R[0, 0], R[0, 1], R[0, 2], t[0, 0]],
@@ -50,7 +63,10 @@ def read_kitti_bin_file(bin_path):
     return points
 
 def get_point_cloud(bin_path):
-    # 将点转换为 Open3D 的 PointCloud 对象
+    """
+        bin to PointCloud
+        将点转换为 Open3D 的 PointCloud 对象
+    """
     points = read_kitti_bin_file(bin_path)
 
     points_3d = o3d.geometry.PointCloud()

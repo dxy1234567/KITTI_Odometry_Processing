@@ -10,15 +10,14 @@ from utils.functions import get_point_cloud, read_odom, odom_to_R_t, read_pcd_li
 from utils.util import print_progress, print_time
 
 
-def combine_pcd(directory_pcd, directory_image, path_odom, path_calib, directory_output):
+def combine_pcd(directory_pcd, path_odom, path_calib, directory_output):
     odom_lists = read_odom(path_odom)
     pcd_lists = read_pcd_list(directory_pcd)
-    image_lists = read_image_list(directory_image)
 
     _, R, t = read_calib(path_calib)
     T_CL = R_t_to_T(R, t)
 
-    N = min(len(pcd_lists), len(image_lists))
+    N = len(pcd_lists)
 
     start_time = time.time()
     print("----------------Combining begins----------------")

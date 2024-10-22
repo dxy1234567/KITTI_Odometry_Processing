@@ -87,7 +87,7 @@ def pcd_projection(image_origin, cloud_origin, camera_intrinsics, dist_coeffs, p
     
     return pts_2d
 
-def get_depth(image_origin, cloud_origin, camera_intrinsics, dist_coeffs, path_output):
+def get_depth(height, width, cloud_origin, camera_intrinsics, dist_coeffs, path_output):
     # Extract 3D points within a certain range
     pts_3d = []     # 三位点（以雷达坐标系为基准）
     for point_3d in np.asarray(cloud_origin.points):        # 遍历点云中所有点
@@ -102,17 +102,15 @@ def get_depth(image_origin, cloud_origin, camera_intrinsics, dist_coeffs, path_o
     tvec = np.array([[0], [0], [0]], dtype=np.float64)
     # Project 3D points into image view
     pts_2d, _ = cv2.projectPoints(np.array(pts_3d), rvec, tvec, camera_intrinsics, dist_coeffs)
-    depth_map = np.zeros_like(image_origin)
+    depth_map = np.zeros((height, width))
 
     for i, point_2d in enumerate(pts_2d):
         x, y = point_2d.ravel()
         x, y = int(x), int(y)
-        if 0 <= x < image_origin.shape[1] and 0 <= y < image_origin.shape[0]:
+        if 0 <= x < width and 0 <= y < height:
             cur_depth = pts_3d[i][2]  # 获取当前点的深度
             depth = depth_within_255(max_depth, min_depth, cur_depth)
             depth_map[y, x] = depth
 
     cv2.imwrite(path_output, depth_map)
     cv2.waitKey(0)
-    
-    return pts_2d

@@ -47,12 +47,11 @@ def project(directory_combined_pcd, directory_image, path_calib, directory_outpu
 
         path_output = os.path.join(directory_output, "{:06d}".format(j) + ".png")
 
-        pts2d = pcd_projection(image_origin, cloud_origin, camera_intrinsics, dist_coeffs, path_output)
+        pcd_projection(image_origin, cloud_origin, camera_intrinsics, dist_coeffs, path_output)
         print_progress(i, N)
 
-def generate_depth_gt(directory_combined_pcd, directory_image, path_calib, directory_output_depth):
+def generate_depth_gt(height, width, directory_combined_pcd, path_calib, directory_output_depth):
     combined_pcd_list = read_pcd_list(directory_combined_pcd)
-    image_list = read_image_list(directory_image)
 
     K, R, t = read_calib(path_calib)
     ### rrr
@@ -76,25 +75,21 @@ def generate_depth_gt(directory_combined_pcd, directory_image, path_calib, direc
             break
 
         path_pcd = combined_pcd_list[i]
-        path_image = image_list[j]
-
-        image_origin = cv2.imread(path_image)
         cloud_origin = o3d.io.read_point_cloud(path_pcd)
         ### rrr
         # cloud_origin.transform(T)
 
         path_output = os.path.join(directory_output_depth, "{:06d}".format(j) + ".png")
 
-        pts2d = get_depth(image_origin, cloud_origin, camera_intrinsics, dist_coeffs, path_output)
+        get_depth(height, width, cloud_origin, camera_intrinsics, dist_coeffs, path_output)
         print_progress(i, N)
     print("---------------End of Depth Generating---------------")
     end_time = time.time()
     dur_time = end_time - start_time
     print("Depth Spends {}s.".format(dur_time))
 
-def generate_depth_normal(directory_combined_pcd, directory_image, path_calib, directory_output_depth):
-    combined_pcd_list = read_pcd_list(directory_combined_pcd)
-    image_list = read_image_list(directory_image)
+def generate_depth(height, width, directory_pcd, path_calib, directory_output_depth):
+    pcd_list = read_pcd_list(directory_pcd)
 
     K, R, t = read_calib(path_calib)
     T = R_t_to_T(R, t)
@@ -105,9 +100,9 @@ def generate_depth_normal(directory_combined_pcd, directory_image, path_calib, d
     ## 畸变参数
     dist_coeffs = np.float64([0, 0, 0, 0, 0])
 
-    N = len(combined_pcd_list)
+    N = len(pcd_list)
 
-    start_index = int(os.path.splitext(os.path.basename(combined_pcd_list[0]))[0])
+    start_index = int(os.path.splitext(os.path.basename(pcd_list[0]))[0])
     # i表示为XT16时间戳序号（下标）
     start_time = time.time()
     print("---------------Depth Generating---------------")
@@ -116,16 +111,13 @@ def generate_depth_normal(directory_combined_pcd, directory_image, path_calib, d
         if j >= N - 5:
             break
 
-        path_pcd = combined_pcd_list[i]
-        path_image = image_list[j]
-
-        image_origin = cv2.imread(path_image)
+        path_pcd = pcd_list[i]
         cloud_origin = o3d.io.read_point_cloud(path_pcd)
         cloud_origin.transform(T)
 
         path_output = os.path.join(directory_output_depth, "{:06d}".format(j) + ".png")
 
-        pts2d = get_depth(image_origin, cloud_origin, camera_intrinsics, dist_coeffs, path_output)
+        get_depth(height, width, cloud_origin, camera_intrinsics, dist_coeffs, path_output)
         print_progress(i, N)
     print("---------------End of Depth Generating---------------")
     end_time = time.time()
