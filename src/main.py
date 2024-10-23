@@ -35,7 +35,7 @@ def main():
 
     height, width = get_image_dimensions(dir_to_img)
 
-    for i in range(11):
+    for i in range(5, 11):
         dir_pcd_bin = os.path.join(dir_to_pcd_bin, "{:02d}".format(i), "velodyne")
         path_pose = os.path.join(dir_to_poses, "{:02d}.txt".format(i))
         path_calib = os.path.join(dir_to_calib, "{:02d}".format(i), "calib.txt")

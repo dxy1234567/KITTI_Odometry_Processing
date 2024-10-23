@@ -5,8 +5,7 @@ import sys
 import yaml
 import time
 sys.path.append(".")
-
-from utils.functions import get_point_cloud, read_odom, odom_to_R_t, read_pcd_list, read_image_list, read_calib, R_t_to_T
+from utils.functions import get_point_cloud, read_odom, odom_to_R_t, read_pcd_list, read_calib, R_t_to_T
 from utils.util import print_progress, print_time
 
 

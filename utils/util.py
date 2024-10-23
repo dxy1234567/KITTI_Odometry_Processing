@@ -15,8 +15,8 @@ def print_progress(i, N):
 def print_time(start_time, end_time):
     dur_time = end_time - start_time
 
-    int(hours) = dur_time // 3600
-    int(minutes) = (dur_time % 3600) // 60
+    hours = int(dur_time // 3600)
+    minutes = int((dur_time % 3600) // 60)
     seconds = round(dur_time % 60, 2)  # 保留两位小数
 
     if hours > 0:
