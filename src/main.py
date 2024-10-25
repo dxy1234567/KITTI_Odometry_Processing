@@ -35,7 +35,7 @@ def main():
 
     height, width = get_image_dimensions(dir_to_img)
 
-    for i in range(5, 11):
+    for i in range(1, 2):
         dir_pcd_bin = os.path.join(dir_to_pcd_bin, "{:02d}".format(i), "velodyne")
         path_pose = os.path.join(dir_to_poses, "{:02d}.txt".format(i))
         path_calib = os.path.join(dir_to_calib, "{:02d}".format(i), "calib.txt")
@@ -43,7 +43,7 @@ def main():
         dir_output_depth = os.path.join(dir_to_depth, "{:02d}".format(i), "depth")
         dir_output_depth_gt = os.path.join(dir_to_depth, "{:02d}".format(i), "depth_gt")
 
-        bin_to_depth(height, width, dir_pcd_bin, path_calib, dir_output_depth)
+        # bin_to_depth(height, width, dir_pcd_bin, path_calib, dir_output_depth)
         bin_to_com_depth(height, width, dir_pcd_bin, path_pose, path_calib, dir_output_depth_gt)
 
         # combine_pcd(dir_pcd_bin, path_pose, path_calib, dir_output_com)
