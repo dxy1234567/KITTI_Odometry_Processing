@@ -26,6 +26,16 @@ def R_t_to_T(R, t):
     ])
     return T
 
+
+def read_calib_T(path_file):
+    """
+    直接读取外参
+    """
+    # 直接从文件中读取32位浮点数，然后重新塑形为4x4矩阵
+    extrinsic = np.fromfile(path_file, dtype=np.float32).reshape((4, 4))
+    return extrinsic
+            
+
 def read_calib(path_file):
     """
         读取KITTI的外参信息，读取左相机。
