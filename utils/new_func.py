@@ -73,4 +73,50 @@ def match_closest_timestamps(timestamps_10hz_list, timestamps_15hz_list):
 
     return matched_indices
 
+def delete_files_before_common_timestamp(folder1, folder2, folder3):
+    # 获取三个文件夹中的文件名列表，并提取时间戳
+    timestamps1 = sorted([float(os.path.splitext(f)[0]) for f in os.listdir(folder1) if os.path.isfile(os.path.join(folder1, f))])
+    timestamps2 = sorted([float(os.path.splitext(f)[0]) for f in os.listdir(folder2) if os.path.isfile(os.path.join(folder2, f))])
+    timestamps3 = sorted([float(os.path.splitext(f)[0]) for f in os.listdir(folder3) if os.path.isfile(os.path.join(folder3, f))])
 
+    # 找到三个文件夹中最小时间戳的最大值
+    min_timestamp = max(timestamps1[0], timestamps2[0], timestamps3[0])
+
+    # 定义删除文件的函数
+    def delete_older_files(folder, min_timestamp):
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
+            # 提取文件的时间戳并进行比较
+            timestamp = float(os.path.splitext(filename)[0])
+            if timestamp < min_timestamp:
+                os.remove(file_path)  # 删除文件
+                print(f"删除文件: {file_path}")
+
+    # 删除三个文件夹中小于 min_timestamp 的文件
+    delete_older_files(folder1, min_timestamp)
+    delete_older_files(folder2, min_timestamp)
+    delete_older_files(folder3, min_timestamp)
+
+    # 对比并删除末尾文件，使文件数量相同
+    def equalize_file_counts(folder1, folder2, folder3):
+        # 获取每个文件夹中剩余文件的时间戳数量
+        timestamps1 = sorted([f for f in os.listdir(folder1) if os.path.isfile(os.path.join(folder1, f))])
+        timestamps2 = sorted([f for f in os.listdir(folder2) if os.path.isfile(os.path.join(folder2, f))])
+        timestamps3 = sorted([f for f in os.listdir(folder3) if os.path.isfile(os.path.join(folder3, f))])
+
+        # 获取最小的文件数量
+        min_count = min(len(timestamps1), len(timestamps2), len(timestamps3))
+
+        # 删除多出的文件（从末尾删除）
+        for folder, timestamps in zip([folder1, folder2, folder3], [timestamps1, timestamps2, timestamps3]):
+            if len(timestamps) > min_count:
+                extra_files = timestamps[min_count:]  # 选取多出的文件
+                for file in extra_files:
+                    file_path = os.path.join(folder, file)
+                    os.remove(file_path)
+                    print(f"删除文件: {file_path}")
+
+    # 调用函数对三个文件夹进行文件数量对齐
+    equalize_file_counts(folder1, folder2, folder3)
+
+    
