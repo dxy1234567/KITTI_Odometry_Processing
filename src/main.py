@@ -7,6 +7,7 @@ from combined_pcd import combine_pcd
 from projection import project, generate_depth_gt, generate_depth
 from utils.util import read_config
 from src.bin_to_depth import bin_to_depth, bin_to_com_depth
+from src.pcd_to_depth import pcd_to_depth, pcd_to_com_depth
 
 def main():
     # path_to_yaml = ""
@@ -27,40 +28,32 @@ def main():
     # directory_output_depth = config["directory_output_depth"]
     # directory_output_com_depth = config["directory_output_com_depth"]
 
-    dir_to_pcd_bin = "/data/KITTI/data_odometry_velodyne/dataset/sequences/"
-    dir_to_img = "/data/KITTI_to_DC/"
-    dir_to_poses = "/data/KITTI/data_odometry_poses/dataset/poses/"
-    dir_to_calib = "/data/KITTI/data_odometry_calib/dataset/sequences/"
-    dir_to_depth = "/data/KITTI_to_DC/"
+    dir_pcd = '/data/gml/20241025/gml_2024-10-25-15-59-06/_livox_lidar'
+    dir_DC = '/data/gml_to_DC'
+    depth_output = '/data/gml_to_DC/00/depth'
+    gt_output = '/data/gml_to_DC/00/depth_gt'
+    path_intrinsic = 'args/intrinsic.txt'
+    path_calib = 'args/extrinsic.txt'
+    path_poses = '/data/gml/20241025/gml_2024-10-25-15-59-06/pose_10hz.txt'
 
-    height, width = get_image_dimensions(dir_to_img)
 
-    for i in range(1, 2):
-        dir_pcd_bin = os.path.join(dir_to_pcd_bin, "{:02d}".format(i), "velodyne")
-        path_pose = os.path.join(dir_to_poses, "{:02d}.txt".format(i))
-        path_calib = os.path.join(dir_to_calib, "{:02d}".format(i), "calib.txt")
 
-        dir_output_depth = os.path.join(dir_to_depth, "{:02d}".format(i), "depth")
-        dir_output_depth_gt = os.path.join(dir_to_depth, "{:02d}".format(i), "depth_gt")
+    height, width = get_image_dimensions(dir_DC)
 
-        # bin_to_depth(height, width, dir_pcd_bin, path_calib, dir_output_depth)
-        bin_to_com_depth(height, width, dir_pcd_bin, path_pose, path_calib, dir_output_depth_gt)
+    # for i in range(0, 1):
+    #     path_pose = os.path.join(dir_to_poses, "{:02d}.txt".format(i))
+    #     path_calib = os.path.join(dir_to_calib, "{:02d}".format(i), "calib.txt")
 
-        # combine_pcd(dir_pcd_bin, path_pose, path_calib, dir_output_com)
-        # generate_depth(height, width, dir_depth, path_calib, dir_depth)
-        # generate_depth_gt(height, width, dir_output_com, path_calib, dir_depth_gt)
+    #     dir_output_depth = os.path.join(dir_to_depth, "{:02d}".format(i), "depth")
+    #     dir_output_depth_gt = os.path.join(dir_to_depth, "{:02d}".format(i), "depth_gt")
+
         
-        print("***********************\nSequnce {} done.\n***********************\n\n\n".format(i))
+        
+    #     print("***********************\nSequnce {} done.\n***********************\n\n\n".format(i))
 
+    # pcd_to_depth(height, width, dir_pcd, path_calib, path_intrinsic, depth_output)
+    pcd_to_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrinsic, gt_output)
 
-
-
-
-    # combine_pcd(directory_pcd, directory_image, path_odom, path_calib, directory_output_com)
-
-    # project(directory_combined_pcd, directory_image, path_odom, path_calib, directory_output_pro)
-
-    # generate_depth(directory_combined_pcd, directory_image, path_calib, directory_output_com_depth)
 
 
 
