@@ -30,8 +30,8 @@ def pcd_to_depth(height, width, dir_pcd, path_calib, path_intrinsic, dir_output)
     start_time = time.time()
     print("----------------Depth Genration begins----------------")
     for i in range(5, N - 5):
-        filename = pcd_lists[i]
-        pcd_origin = o3d.io.read_point_cloud(filename)
+        filename = os.path.basename(pcd_lists[i])
+        pcd_origin = o3d.io.read_point_cloud(pcd_lists[i])
         pcd_origin.transform(T_CL)
         
         path_output = os.path.join(dir_output, filename.replace('.pcd', '.png'))
