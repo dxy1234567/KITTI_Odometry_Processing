@@ -13,11 +13,13 @@ from utils.functions import *
 from utils.util import *
 from utils.new_func import *
 
+T_XM = read_matrix('args/Mid_to_XT.txt')
 
 def pcd_to_depth(height, width, dir_pcd, path_calib, path_intrinsic, dir_output):
     pcd_lists = read_pcd_list(dir_pcd)
 
     T_CL = read_matrix(path_calib)
+    T_MX = np.linalg.inv(T_XM)
 
     # 相机内参
     camera_intrinsics = read_matrix(path_intrinsic)
@@ -32,6 +34,7 @@ def pcd_to_depth(height, width, dir_pcd, path_calib, path_intrinsic, dir_output)
     for i in range(5, N - 5):
         filename = os.path.basename(pcd_lists[i])
         pcd_origin = o3d.io.read_point_cloud(pcd_lists[i])
+        pcd_origin.transform(T_MX)  # added
         pcd_origin.transform(T_CL)
         
         path_output = os.path.join(dir_output, filename.replace('.pcd', '.png'))
@@ -51,6 +54,7 @@ def pcd_to_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrin
 
     # 外参
     T_CL = read_matrix(path_calib)
+    T_MX = np.linalg.inv(T_XM)
 
     # 相机内参
     camera_intrinsics = read_matrix(path_intrinsic)

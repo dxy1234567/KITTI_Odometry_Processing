@@ -31,8 +31,6 @@ def main():
 
     dir_pcd = '/data/gml/20241025/gml_2024-10-25-15-59-06/_livox_lidar'
     dir_DC = '/data/gml_to_DC'
-    depth_output = '/data/gml_to_DC/00/depth'
-    gt_output = '/data/gml_to_DC/00/depth_gt'
     path_intrinsic = 'args/intrinsic.txt'
     path_calib = 'args/extrinsic.txt'
     path_poses = '/data/gml/20241025/gml_2024-10-25-15-59-06/pose_10hz.txt'
@@ -40,6 +38,9 @@ def main():
     path_d = '/data/gml_to_DC/00/depth'
     path_g = '/data/gml_to_DC/00/depth_gt'
     path_gary = '/data/gml_to_DC/00/gray'
+
+    depth_output = '/data/gml_to_DC/00/depth'
+    gt_output = '/data/gml_to_DC/00/depth_gt'
 
 
     height, width = get_image_dimensions(dir_DC)
@@ -55,10 +56,10 @@ def main():
         
     #     print("***********************\nSequnce {} done.\n***********************\n\n\n".format(i))
 
-    # pcd_to_depth(height, width, dir_pcd, path_calib, path_intrinsic, depth_output)
-    # pcd_to_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrinsic, gt_output)
+    pcd_to_depth(height, width, dir_pcd, path_calib, path_intrinsic, depth_output)
+    pcd_to_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrinsic, gt_output)
 
-    delete_files_before_common_timestamp(path_d, path_g, path_gary)
+    post_processing(path_d, path_g, path_gary)
 
 
 

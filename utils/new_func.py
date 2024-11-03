@@ -119,4 +119,26 @@ def delete_files_before_common_timestamp(folder1, folder2, folder3):
     # 调用函数对三个文件夹进行文件数量对齐
     equalize_file_counts(folder1, folder2, folder3)
 
-    
+def rename_files_in_sequence(folder):
+    """
+    将制作好的数据集按照顺序命名。
+    """
+    # 获取文件列表并按时间戳排序
+    files = sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))],
+                   key=lambda x: float(os.path.splitext(x)[0]))
+
+    # 遍历并重命名文件
+    for i, filename in enumerate(files):
+        # 创建新的文件名，6位数，不足补0
+        new_name = f"{i+1:06}.png"  # 假设文件后缀是.png
+        old_path = os.path.join(folder, filename)
+        new_path = os.path.join(folder, new_name)
+
+        os.rename(old_path, new_path)
+        print(f"重命名文件: {old_path} -> {new_path}")
+
+def post_processing(folder1, folder2, folder3):
+    delete_files_before_common_timestamp(folder1, folder2, folder3)
+    rename_files_in_sequence(folder1)
+    rename_files_in_sequence(folder2)
+    rename_files_in_sequence(folder3)
