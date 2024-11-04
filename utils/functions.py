@@ -4,8 +4,8 @@ import os
 import bisect
 import cv2
 
-def get_image_dimensions(dir_to_image):
-    dir_image = os.path.join(dir_to_image, "00", "gray")
+def get_image_dimensions(dir_to_image, sequence):
+    dir_image = os.path.join(dir_to_image, '{:02d}'.format(sequence), "gray")
     files = os.listdir(dir_image)
     
     for file in files:

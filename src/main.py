@@ -29,7 +29,7 @@ def main():
     # directory_output_depth = config["directory_output_depth"]
     # directory_output_com_depth = config["directory_output_com_depth"]
 
-    dir_pcd = '/data/gml/20241025/gml_2024-10-25-15-59-06/_livox_lidar'
+    dir_pcd = '/data/gml/20241025/gml_2024-10-25-15-59-06/_hesai_pandar/'
     dir_DC = '/data/gml_to_DC'
     path_poses = '/data/gml/20241025/gml_2024-10-25-15-59-06/pose_200hz.txt'
 
@@ -37,9 +37,9 @@ def main():
     path_g = '/data/gml_to_DC/01/depth_gt'
     path_gary = '/data/gml_to_DC/01/gray'
 
+    sequence = 1
 
-
-    height, width = get_image_dimensions(dir_DC)
+    height, width = get_image_dimensions(dir_DC, sequence)
 
     # for i in range(0, 1):
     #     path_pose = os.path.join(dir_to_poses, "{:02d}.txt".format(i))
