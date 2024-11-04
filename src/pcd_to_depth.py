@@ -12,12 +12,14 @@ from utils.pcd2depth import *
 from utils.util import *
 from utils.new_func import *
 
-T_XM = read_matrix('args/Mid_to_XT.txt')
+path_cm = 'args/Mid_to_Camera.txt'
+path_xm = 'args/Mid_to_XT.txt'
+path_intrinsic = 'args/intrinsic.txt'
 
-def pcd_to_depth(height, width, dir_pcd, path_calib, path_intrinsic, dir_output):
+def pcd_to_depth(height, width, dir_pcd, dir_output):
     pcd_lists = read_pcd_list(dir_pcd)
 
-    T_CL = read_matrix(path_calib)
+    T_CL = read_matrix(path_cm)
 
     # 相机内参
     camera_intrinsics = read_matrix(path_intrinsic)
@@ -43,14 +45,14 @@ def pcd_to_depth(height, width, dir_pcd, path_calib, path_intrinsic, dir_output)
     end_time = time.time()
     print_time(start_time, end_time)
 
-def pcd_to_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrinsic, dir_output):
+def pcd_to_com_depth(height, width, dir_pcd, path_poses, dir_output):
     poses_lists = read_matrix(path_poses)
     pcds_list = read_pcd_list(dir_pcd)
 
     poses_lists = poses_to_transformation_matrix(poses_lists)
 
     # 外参
-    T_CL = read_matrix(path_calib)
+    T_CL = read_matrix(path_cm)
 
     # 相机内参
     camera_intrinsics = read_matrix(path_intrinsic)
@@ -87,13 +89,14 @@ def pcd_to_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrin
     end_time = time.time()
     print_time(start_time, end_time)
     
-def pcd_xt_to_mid_depth(height, width, dir_pcd, path_calib, path_intrinsic, dir_output):
+def pcd_xt_to_mid_depth(height, width, dir_pcd, dir_output):
     """
     点云转深度图，从XT16到MID360到相机。
     """
     pcd_lists = read_pcd_list(dir_pcd)
 
-    T_CM = read_matrix(path_calib)
+    T_CM = read_matrix(path_cm)
+    T_XM = read_matrix(path_xm)
     T_MX = np.linalg.inv(T_XM)
 
     # 相机内参
@@ -121,7 +124,7 @@ def pcd_xt_to_mid_depth(height, width, dir_pcd, path_calib, path_intrinsic, dir_
     end_time = time.time()
     print_time(start_time, end_time)
 
-def pcd_xt_to_mid_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrinsic, dir_output):
+def pcd_xt_to_mid_com_depth(height, width, dir_pcd, path_poses, dir_output):
     """
     拼接点云，转深度图，从XT16到MID360到相机。
     """
@@ -130,7 +133,8 @@ def pcd_xt_to_mid_com_depth(height, width, dir_pcd, path_poses, path_calib, path
 
 
     # 外参
-    T_CM = read_matrix(path_calib)
+    T_CM = read_matrix(path_cm)
+    T_XM = read_matrix(path_xm)
     T_MX = np.linalg.inv(T_XM)
     T_CX = T_CM @ T_MX
 
@@ -147,7 +151,7 @@ def pcd_xt_to_mid_com_depth(height, width, dir_pcd, path_poses, path_calib, path
         combined_pcd = o3d.geometry.PointCloud()
         filename = os.path.basename(pcds_list[i])   # basename带后缀
         t = find_closest_timestamp_index(filename, hf_poses_lists[:, 0])    # 对应高频位姿的下标
-        
+
         T_WM = pose_to_T(hf_poses_lists, t)     ### MID坐标系到世界坐标系
         T_WX = T_WM @ T_MX              ### X坐标系到世界坐标系
         T_XW = np.linalg.inv(T_WX)      
