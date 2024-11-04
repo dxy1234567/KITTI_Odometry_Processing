@@ -121,7 +121,7 @@ def pcd_xt_to_mid_depth(height, width, dir_pcd, path_calib, path_intrinsic, dir_
     end_time = time.time()
     print_time(start_time, end_time)
 
-def pcd_to_xt_mid_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrinsic, dir_output):
+def pcd_xt_to_mid_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrinsic, dir_output):
     """
     拼接点云，转深度图，从XT16到MID360到相机。
     """
