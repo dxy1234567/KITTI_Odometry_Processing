@@ -20,6 +20,27 @@ def read_matrix(path_file):
             matrix.append(list(map(float, line.split())))
     return np.array(matrix)
 
+def pose_to_T(poses_lists, i):
+    """
+    单个位姿转换为变换矩阵
+    """
+    pose = poses_lists[i]
+    # 提取平移向量 (tx, ty, tz) 和四元数 (qx, qy, qz, qw)
+    tx, ty, tz = pose[1], pose[2], pose[3]
+    qx, qy, qz, qw = pose[4], pose[5], pose[6], pose[7]
+
+    # 使用四元数创建旋转矩阵
+    rotation_matrix = o3d.geometry.get_rotation_matrix_from_quaternion([qw, qx, qy, qz])  # 注意四元数的顺序
+
+    # 构建变换矩阵 T
+    T = np.eye(4)
+    T[:3, :3] = rotation_matrix  # 设置旋转矩阵
+    T[:3, 3] = [tx, ty, tz]      # 设置平移向量
+
+    # 存储变换矩阵
+    
+    return np.array(T)
+
 def poses_to_transformation_matrix(poses_lists):
     transformation_matrices = []
     for pose in poses_lists:
@@ -54,6 +75,9 @@ def convert_timestamp_strings_to_floats(timestamps_list):
     return timestamps
 
 def match_closest_timestamps(timestamps_10hz_list, timestamps_15hz_list):
+    """
+    在15Hz时间戳中找到与10Hz时间戳数量相等的最接近的时间戳组。
+    """
     timestamps_10hz = convert_timestamp_strings_to_floats(timestamps_10hz_list)
     timestamps_15hz = convert_timestamp_strings_to_floats(timestamps_15hz_list)
 
@@ -72,6 +96,27 @@ def match_closest_timestamps(timestamps_10hz_list, timestamps_15hz_list):
         matched_indices.append(closest_index)
 
     return matched_indices
+
+def find_closest_timestamp_index(target, timestamps):
+    if target.endswith('.pcd'):
+        target = target.replace('.pcd', '')
+
+    target_float = float(target.replace('_', '.'))
+    
+    # 初始化最小差值和最近的时间戳下标
+    min_diff = float("inf")
+    closest_index = -1
+
+    # 遍历时间戳组，将每个时间戳转换为浮点数并计算差值
+    for i, ts in enumerate(timestamps):
+        ts_float = float(ts.replace('_', '.'))
+        
+        diff = abs(ts_float - target_float)
+        if diff < min_diff:
+            min_diff = diff
+            closest_index = i
+
+    return closest_index
 
 def delete_files_before_common_timestamp(folder1, folder2, folder3):
     # 获取三个文件夹中的文件名列表，并提取时间戳
@@ -142,3 +187,9 @@ def post_processing(folder1, folder2, folder3):
     rename_files_in_sequence(folder1)
     rename_files_in_sequence(folder2)
     rename_files_in_sequence(folder3)
+
+def rename_files_in_sequence(folder1, folder2, folder3):
+    rename_files_in_sequence(folder1)
+    rename_files_in_sequence(folder2)
+    rename_files_in_sequence(folder3)
+
