@@ -33,7 +33,7 @@ def main():
     dir_DC = '/data/gml_to_DC'
     path_poses = '/data/gml/20241025/gml_2024-10-25-15-59-06/pose_200hz.txt'
 
-    sequence = 2
+    sequence = 4
 
     path_d = '/data/gml_to_DC/' + '{:02d}'.format(sequence) + '/depth'
     path_g = '/data/gml_to_DC/' + '{:02d}'.format(sequence) + '/depth_gt'

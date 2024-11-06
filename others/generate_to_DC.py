@@ -33,10 +33,10 @@ def generate_to_DC(src_dir, pcd_dir, dir_dc, sequence):
                 shutil.copy(path_img, dir_dst)
 
 src_dir = "/data/gml/20241103/gml_2024-11-03-17-26-31/_camera_infra1_image_rect_raw/"  # 源目录
-pcd_dir = '/data/gml/20241103/gml_2024-11-03-17-26-31/_hesai_pandar/'
+pcd_dir = '/data/gml/20241103/gml_2024-11-03-17-26-31/_livox_lidar/'
 dir_dc = "/data/gml_to_DC/"
 
-sequence = 3
+sequence = 4
 
 generate_to_DC(src_dir, pcd_dir, dir_dc, sequence)
 

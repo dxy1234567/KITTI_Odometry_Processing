@@ -110,8 +110,8 @@ def get_depth(height, width, cloud_origin, camera_intrinsics, dist_coeffs, path_
         if 0 <= x < width and 0 <= y < height:
             cur_depth = pts_3d[i][2]  # 获取当前点的深度
             # depth = depth_within_255(max_depth, min_depth, cur_depth)
-            cur_depth = np.uint16(cur_depth)
+            cur_depth = np.uint16(cur_depth * 256.0)
             depth_map[y, x] = cur_depth
 
-    cv2.imwrite(path_output, depth_map, cv2.IMREAD_UNCHANGED)
+    cv2.imwrite(path_output, depth_map, [cv2.IMWRITE_PNG_COMPRESSION, 0])
     cv2.waitKey(0)
