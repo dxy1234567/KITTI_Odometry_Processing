@@ -29,15 +29,16 @@ def main():
     # directory_output_depth = config["directory_output_depth"]
     # directory_output_com_depth = config["directory_output_com_depth"]
 
-    dir_pcd = '/data/gml/20241025/gml_2024-10-25-15-59-06/_hesai_pandar/'
+    dir_pcd = '/data/gml/20241103/gml_2024-11-03-17-26-31/_livox_lidar/'
     dir_DC = '/data/gml_to_DC'
     path_poses = '/data/gml/20241025/gml_2024-10-25-15-59-06/pose_200hz.txt'
 
-    path_d = '/data/gml_to_DC/01/depth'
-    path_g = '/data/gml_to_DC/01/depth_gt'
-    path_gary = '/data/gml_to_DC/01/gray'
+    sequence = 2
 
-    sequence = 1
+    path_d = '/data/gml_to_DC/' + '{:02d}'.format(sequence) + '/depth'
+    path_g = '/data/gml_to_DC/' + '{:02d}'.format(sequence) + '/depth_gt'
+    path_gary = '/data/gml_to_DC/' + '{:02d}'.format(sequence) + '/gray'
+
 
     height, width = get_image_dimensions(dir_DC, sequence)
 
@@ -52,13 +53,13 @@ def main():
         
     #     print("***********************\nSequnce {} done.\n***********************\n\n\n".format(i))
 
-    # pcd_to_depth(height, width, dir_pcd, path_calib, path_intrinsic, depth_output)
-    # pcd_to_com_depth(height, width, dir_pcd, path_poses, path_calib, path_intrinsic, gt_output)
+    pcd_to_depth(height, width, dir_pcd, path_d)
+    # pcd_to_com_depth(height, width, dir_pcd, path_poses, path_g)
 
-    pcd_xt_to_mid_depth(height, width, dir_pcd, path_d)
-    pcd_xt_to_mid_com_depth(height, width, dir_pcd, path_poses, path_g)
+    # pcd_xt_to_mid_depth(height, width, dir_pcd, path_d)
+    # pcd_xt_to_mid_com_depth(height, width, dir_pcd, path_poses, path_g)
 
-    post_processing(path_d, path_g, path_gary)
+    # post_processing(path_d, path_g, path_gary)
 
 
 

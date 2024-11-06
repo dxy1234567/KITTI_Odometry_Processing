@@ -109,7 +109,7 @@ def find_closest_timestamp_index(target, timestamps):
 
     # 遍历时间戳组，将每个时间戳转换为浮点数并计算差值
     for i, ts in enumerate(timestamps):
-        ts_float = float(ts.replace('_', '.'))
+        ts_float = float(ts)
         
         diff = abs(ts_float - target_float)
         if diff < min_diff:
@@ -188,8 +188,4 @@ def post_processing(folder1, folder2, folder3):
     rename_files_in_sequence(folder2)
     rename_files_in_sequence(folder3)
 
-def rename_files_in_sequence(folder1, folder2, folder3):
-    rename_files_in_sequence(folder1)
-    rename_files_in_sequence(folder2)
-    rename_files_in_sequence(folder3)
 

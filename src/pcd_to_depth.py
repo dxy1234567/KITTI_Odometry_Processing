@@ -158,8 +158,11 @@ def pcd_xt_to_mid_com_depth(height, width, dir_pcd, path_poses, dir_output):
 
         for j in range(i - 5, i + 5):
             pcd = o3d.io.read_point_cloud(pcds_list[j])
+            
+            target_ts = os.path.basename(pcds_list[j])
+            t = find_closest_timestamp_index(target_ts, hf_poses_lists[:, 0])    # 对应高频位姿的下标
 
-            T_WM = hf_poses_lists[j]
+            T_WM = pose_to_T(hf_poses_lists, t)     ### MID坐标系到世界坐标系
             T_WX = T_WM @ T_MX
 
             pcd.transform(T_WX)
