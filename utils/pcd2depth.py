@@ -113,5 +113,8 @@ def get_depth(height, width, cloud_origin, camera_intrinsics, dist_coeffs, path_
             cur_depth = np.uint16(cur_depth * 256.0)
             depth_map[y, x] = cur_depth
 
-    cv2.imwrite(path_output, depth_map, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+    cv2.imwrite(path_output, depth_map, [cv2.IMWRITE_PNG_COMPRESSION, 9])
     cv2.waitKey(0)
+
+
+
