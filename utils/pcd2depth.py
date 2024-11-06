@@ -102,15 +102,16 @@ def get_depth(height, width, cloud_origin, camera_intrinsics, dist_coeffs, path_
     tvec = np.array([[0], [0], [0]], dtype=np.float64)
     # Project 3D points into image view
     pts_2d, _ = cv2.projectPoints(np.array(pts_3d), rvec, tvec, camera_intrinsics, dist_coeffs)
-    depth_map = np.zeros((height, width))
+    depth_map = np.zeros((height, width), dtype=np.uint16)
 
     for i, point_2d in enumerate(pts_2d):
         x, y = point_2d.ravel()
         x, y = int(x), int(y)
         if 0 <= x < width and 0 <= y < height:
             cur_depth = pts_3d[i][2]  # 获取当前点的深度
-            depth = depth_within_255(max_depth, min_depth, cur_depth)
-            depth_map[y, x] = depth
+            # depth = depth_within_255(max_depth, min_depth, cur_depth)
+            cur_depth = np.uint16(cur_depth)
+            depth_map[y, x] = cur_depth
 
-    cv2.imwrite(path_output, depth_map)
+    cv2.imwrite(path_output, depth_map, cv2.IMREAD_UNCHANGED)
     cv2.waitKey(0)
