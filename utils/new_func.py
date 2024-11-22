@@ -6,6 +6,26 @@ import numpy as np
 import open3d as o3d
 import os
 
+def align_timestamps(poses_list, pcds_list):
+    """
+        位姿与点云的时间戳对齐
+    """
+    # 从第5个点云开始保留
+    pcds_list = pcds_list[4:]
+
+    # 获取两个列表的长度
+    num_poses = len(poses_list)
+    num_pcds = len(pcds_list)
+
+    # 取两者中较小的长度
+    num = min(num_poses, num_pcds)
+
+    # 截断两个列表到相同长度
+    poses_list = poses_list[:num]
+    pcds_list = pcds_list[:num]
+
+    return poses_list, pcds_list
+
 def read_matrix(path_file):
     """
     读取矩阵，跳过注释行
@@ -42,6 +62,10 @@ def pose_to_T(poses_lists, i):
     return np.array(T)
 
 def poses_to_transformation_matrix(poses_lists):
+    """
+        将poses列表转换为变换矩阵列表T
+    """
+
     transformation_matrices = []
     for pose in poses_lists:
         # 提取平移向量 (tx, ty, tz) 和四元数 (qx, qy, qz, qw)

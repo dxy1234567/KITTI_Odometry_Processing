@@ -46,10 +46,13 @@ def pcd_to_depth(height, width, dir_pcd, dir_output):
     print_time(start_time, end_time)
 
 def pcd_to_com_depth(height, width, dir_pcd, path_poses, dir_output):
-    poses_lists = read_matrix(path_poses)
+    poses_list = read_matrix(path_poses)
     pcds_list = read_pcd_list(dir_pcd)
 
-    poses_lists = poses_to_transformation_matrix(poses_lists)
+    poses_list, pcds_list = align_timestamps(poses_list, pcds_list)
+
+    # 位姿Pose转化为变换矩阵T列表
+    poses_list = poses_to_transformation_matrix(poses_list)
 
     # 外参
     T_CL = read_matrix(path_cm)
@@ -66,13 +69,13 @@ def pcd_to_com_depth(height, width, dir_pcd, path_poses, dir_output):
     for i in range(5, N - 5):
         combined_pcd = o3d.geometry.PointCloud()
         filename = os.path.basename(pcds_list[i])
-        T_WL = poses_lists[i]           ### 相机坐标系到世界坐标系
+        T_WL = poses_list[i]           ### 相机坐标系到世界坐标系
         T_LW = np.linalg.inv(T_WL)                 ####世界坐标系到新相机坐标系
 
         for j in range(i - 5, i + 5):
             pcd = o3d.io.read_point_cloud(pcds_list[j])
 
-            T_WL = poses_lists[j]
+            T_WL = poses_list[j]
 
             pcd.transform(T_WL)
             combined_pcd += pcd
