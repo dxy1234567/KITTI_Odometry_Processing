@@ -4,7 +4,7 @@ def print_progress(i, N):
     """
     打印当前进度。
 
-    Param:
+    Params:
         i: 当前进度（第i次迭代）
         N: 总迭代次数
     """

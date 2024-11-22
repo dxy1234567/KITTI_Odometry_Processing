@@ -15,6 +15,14 @@ from utils.util import print_progress, print_time
 
 
 def bin_to_depth(height, width, dir_pcd, path_calib, dir_output):
+    """
+        Param:
+            height: 图像高
+            width:  图像宽
+            dir_pcd:    点云所在目录
+            path_calib: 外参所在路径
+            dir_output: 输出路径
+    """
     pcd_lists = read_pcd_list(dir_pcd)
 
     K, R, t = read_calib(path_calib)
@@ -43,6 +51,15 @@ def bin_to_depth(height, width, dir_pcd, path_calib, dir_output):
     print_time(start_time, end_time)
 
 def bin_to_com_depth(height, width, dir_pcd, path_odom, path_calib, dir_output):
+    """
+        Param:
+            height: 图像高
+            width:  图像宽
+            dir_pcd:    点云所在目录
+            path_odom:  里程计（位姿）信息所在路径
+            path_calib: 外参所在路径
+            dir_output: 输出路径
+    """
     odom_lists = read_odom(path_odom)
     pcd_lists = read_pcd_list(dir_pcd)
 
@@ -66,6 +83,63 @@ def bin_to_com_depth(height, width, dir_pcd, path_odom, path_calib, dir_output):
         T_CW = np.linalg.inv(T_WC)                 ####世界坐标系到新相机坐标系
 
         for j in range(i - 5, i + 5):
+            pcd = get_point_cloud(pcd_lists[j])
+
+            T_WC, _, _ = odom_to_R_t(odom_lists, j)
+            T_WL = T_WC @ T_CL 
+
+            pcd.transform(T_WL)
+            combined_pcd += pcd
+        # 得到相机坐标系下的拼接点云
+        combined_pcd.transform(T_CW)
+        ### 得到拼接点云
+        
+        path_output = os.path.join(dir_output, "{:06d}".format(i) + ".png")
+        get_depth(height, width, combined_pcd, camera_intrinsics, dist_coeffs, path_output)
+
+        print_progress(i, N)
+    print("---------------End of Dense Depth Generating---------------")
+    end_time = time.time()
+    print_time(start_time, end_time)
+    
+def bin_to_n_com_depth(height, width, dir_pcd, path_odom, path_calib, dir_output, n):
+    """
+        拼接起点默认第101帧
+
+        Params:
+            height: 图像高
+            width:  图像宽
+            dir_pcd:    点云所在目录
+            path_odom:  里程计（位姿）信息所在路径
+            path_calib: 外参所在路径
+            dir_output: 输出路径
+            n: 拼接前、后半帧数
+    """
+    os.makedirs(dir_output, exist_ok=True)
+
+    odom_lists = read_odom(path_odom)
+    pcd_lists = read_pcd_list(dir_pcd)
+
+    K, R, t = read_calib(path_calib)
+    T_CL = R_t_to_T(R, t)
+
+    # 相机内参
+    camera_intrinsics = K
+    ## 畸变参数
+    dist_coeffs = np.float64([0, 0, 0, 0, 0])
+
+    N = len(pcd_lists)
+
+    start_time = time.time()
+    print("----------------Dense Depth Genration begins----------------")
+    for i in range(100, N - 100):
+        combined_pcd = o3d.geometry.PointCloud()
+        filename = os.path.basename(pcd_lists[i])
+        filename = filename.replace(".bin", ".pcd")
+        T_WC, _, _ = odom_to_R_t(odom_lists, i)    ### 相机坐标系到世界坐标系
+        T_CW = np.linalg.inv(T_WC)                 ####世界坐标系到新相机坐标系
+
+        for j in range(i - n, i + n):
             pcd = get_point_cloud(pcd_lists[j])
 
             T_WC, _, _ = odom_to_R_t(odom_lists, j)
